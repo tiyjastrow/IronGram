@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IronGram</title>
+</head>
+<body>
+
+<form action="/login" method="post" id="login" hidden>
+    <input type="text" placeholder="Username" name="userName" />
+    <input type="password" placeholder="Password" name="password" />
+    <button type="submit">Login</button>
+</form>
+
+<form action="/logout" method="post" id="logout" hidden>
+    <button type="submit">Logout</button>
+</form>
+
+<form action="/upload" method="post" enctype="multipart/form-data" id="upload" hidden>
+    <input type="text" placeholder="Receiver name" name="receiver" />
+    <input type="file" name="photo" />
+    <input type="checkbox" name="isPublic" value="true" />make public&nbsp;
+    <input type="number" placeholder="Seconds to Delete" name="seconds" />
+    <button type="submit">Upload</button>
+</form><br/>
+
+<div id="photos"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="main.js" type="text/javascript"></script>
+
+</body>
+</html>
