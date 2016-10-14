@@ -7,6 +7,7 @@ import org.h2.tools.Server;
 import com.theironyard.services.PhotoRepository;
 import com.theironyard.services.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -32,6 +36,8 @@ public class IronGramController {
     PhotoRepository photos;
 
     Server dbui;
+
+    public static Integer timer;
 
     @PostConstruct
     public void init() throws Exception {
@@ -72,8 +78,11 @@ public class IronGramController {
     }
 
     @RequestMapping(path = "/upload", method = RequestMethod.POST)
-    public Photo upload(HttpSession session, HttpServletResponse response, String receiver, MultipartFile photo) throws Exception{
+    public Photo upload(HttpSession session, HttpServletResponse response, String receiver, String delay, String isPublic, MultipartFile photo) throws Exception{
         String username = (String) session.getAttribute("username");
+
+        timer = Integer.parseInt(delay);
+
         if (username == null){
             throw new Exception("not logged in");
         }
@@ -85,6 +94,14 @@ public class IronGramController {
             throw new Exception("receiver doesn't exist");
         }
 
+        Photo p = savePhoto(delay, isPublic, photo, senderUser, receiverUser);
+
+        response.sendRedirect("/");
+
+        return p;
+    }
+
+    private Photo savePhoto(String delay, String isPublic, MultipartFile photo, User senderUser, User receiverUser) throws Exception {
         if (! photo.getContentType().startsWith("image")){
             throw new Exception("only images are allowed");
         }
@@ -97,10 +114,9 @@ public class IronGramController {
         p.setSender(senderUser);
         p.setReceiver(receiverUser);
         p.setFilename(photoFile.getName());
+        p.setDelay(Integer.parseInt(delay));
+        p.setIsPublic(isPublic);
         photos.save(p);
-
-        response.sendRedirect("/");
-
         return p;
     }
 
@@ -110,8 +126,38 @@ public class IronGramController {
         if (username == null) {
             throw new Exception("not logged in");
         }
+
         User user = users.findFirstByName(username);
+
         return photos.findByReceiver(user);
+
+
     }
-    
+
+    @RequestMapping(path = "/delete")
+    public void deletePhoto(HttpSession session) throws Exception {
+        Thread.sleep(timer * 1000);
+        String username = (String) session.getAttribute("username");
+        deleteFiles(username);
+    }
+
+    private void deleteFiles(String username) throws Exception {
+        User receiverUser = users.findFirstByName(username);
+        List<Photo> photoList = photos.findByReceiver(receiverUser);
+        for (Photo p: photoList){
+            String fileName = p.getFilename();
+            Path filePath = Paths.get("public/", fileName);
+            Files.delete(filePath);
+            photos.delete(p);
+        }
+    }
+
+    @RequestMapping(path = "/public-photos/{username}", method = RequestMethod.GET)
+    public List<Photo> getPublicPhotos(HttpSession session, @PathVariable("username") String username){
+        username = (String) session.getAttribute("username");
+        User user = users.findFirstByName(username);
+        List<Photo> publicPhotos = photos.findByReceiver(user);
+
+        return publicPhotos;
+    }
 }

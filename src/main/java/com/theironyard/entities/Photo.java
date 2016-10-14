@@ -22,6 +22,37 @@ public class Photo {
     @Column(nullable = false)
     String filename;
 
+    @Column
+    int delay;
+
+    @Column
+    String isPublic;
+
+    public String getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(String isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public Photo(User sender, User receiver, String filename, int delay, String isPublic) {
+
+        this.sender = sender;
+        this.receiver = receiver;
+        this.filename = filename;
+        this.delay = delay;
+        this.isPublic = isPublic;
+    }
+
+    public int getDelay() {
+        return delay;
+    }
+
+    public void setDelay(int delay) {
+        this.delay = delay;
+    }
+
     public Photo() {
     }
 
