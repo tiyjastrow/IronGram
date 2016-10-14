@@ -21,7 +21,11 @@ function getPhotos(photosData) {
         var elem = $("<img>");
         elem.attr("src", photo.filename);
         $("#photos").append(elem);
+
+        $.get("/delete");
     }
 }
 
+
 $.get("/photos", getPhotos);
+

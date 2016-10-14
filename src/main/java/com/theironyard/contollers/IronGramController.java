@@ -19,6 +19,9 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -28,6 +31,9 @@ import java.util.List;
 
 @RestController
 public class IronGramController {
+
+    public static Integer sleepTimer;
+
     @Autowired
     UserRepo users;
 
@@ -75,7 +81,8 @@ public class IronGramController {
     }
 
     @RequestMapping(path = "/upload", method = RequestMethod.POST)
-    public Photo upload(HttpSession session, HttpServletResponse response, String receiver, MultipartFile photo) throws Exception {
+    public Photo upload(HttpSession session, HttpServletResponse response, String receiver, Integer timer, MultipartFile photo) throws Exception {
+        sleepTimer = timer;
         String userName = (String) session.getAttribute("userName");
         if (userName == null) {
             throw new Exception("null userName");
@@ -106,15 +113,35 @@ public class IronGramController {
     }
 
     @RequestMapping(path = "/photos")
-    public List<Photo> showPhotos(HttpSession session) throws Exception {
+    public List<Photo> showPhotos(HttpSession session, HttpServletResponse response) throws Exception {
         String userName = (String) session.getAttribute("userName");
-        if (userName == null){
+        if (userName == null) {
             throw new Exception("user null");
         }
         User user = users.findFirstByName(userName);
 
         return photos.findByReceiver(user);
+    }
+
+    @RequestMapping(path = "/delete")
+    public void delete(HttpSession session) throws InterruptedException, IOException {
+        String userName = (String) session.getAttribute("userName");
+        
+        Thread.sleep(sleepTimer * 1000);
+        deleteFiles(userName);
 
     }
+
+    private void deleteFiles(String userName) throws IOException {
+        User receiverUser = users.findFirstByName(userName);
+        List<Photo> pList = photos.findByReceiver(receiverUser);
+        for (Photo p : pList) {
+            String fileName = p.getFilename();
+            Path filePath = Paths.get("public/", fileName);
+            Files.delete(filePath);
+            photos.delete(p);
+        }
+    }
+
 
 }
