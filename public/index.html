@@ -19,7 +19,7 @@
 
 <form action="/upload", method="post" enctype="multipart/form-data" id="upload" hidden>
     <input type="text" placeholder="receiver name" name="receiver">
-    <input type="checkbox" placeholder="public" name="isPublic">
+    <input type="checkbox" placeholder="public" name="isPublic" value="notNull">
     <input type="file" name="photo">
     <div>How many seconds would you like this photo to survive? <input type="number" name="timer"></div>
     <button type="submit">upload</button>

@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -81,32 +82,15 @@ public class IronGramController {
     }
 
     @RequestMapping(path = "/upload", method = RequestMethod.POST)
-    public Photo upload(HttpSession session, HttpServletResponse response, String receiver, Integer timer, MultipartFile photo) throws Exception {
+    public Photo upload(HttpSession session, HttpServletResponse response, String receiver, Integer timer, MultipartFile photo, String isPublic) throws Exception {
         sleepTimer = timer;
         String userName = (String) session.getAttribute("userName");
-        if (userName == null) {
-            throw new Exception("null userName");
-        }
         User senderUser = users.findFirstByName(userName);
         User receiverUser = users.findFirstByName(receiver);
 
-        if (receiverUser == null) {
-            throw new Exception("null receiver");
-        }
+        validateUser(userName, receiverUser);
 
-        if (!photo.getContentType().startsWith("image")) {
-            throw new Exception("not an image file");
-        }
-
-        File photoFile = File.createTempFile("photo", photo.getOriginalFilename(), new File("public"));
-        FileOutputStream fos = new FileOutputStream(photoFile);
-        fos.write(photo.getBytes());
-
-        Photo p = new Photo();
-        p.setSender(senderUser);
-        p.setReceiver(receiverUser);
-        p.setFilename(photoFile.getName());
-        photos.save(p);
+        Photo p = savePhoto(photo, isPublic, senderUser, receiverUser);
 
         response.sendRedirect("/");
         return p;
@@ -120,16 +104,58 @@ public class IronGramController {
         }
         User user = users.findFirstByName(userName);
 
-        return photos.findByReceiver(user);
+        List<Photo> publicPhotos = photos.findByIsPublic("notNull");
+
+        List<Photo> receiverPhotos = photos.findByReceiver(user);
+
+        List<Photo> listAll = new ArrayList<>(publicPhotos);
+        listAll.addAll(receiverPhotos);
+
+        return listAll;
     }
 
     @RequestMapping(path = "/delete")
     public void delete(HttpSession session) throws InterruptedException, IOException {
         String userName = (String) session.getAttribute("userName");
-        
+
         Thread.sleep(sleepTimer * 1000);
         deleteFiles(userName);
 
+    }
+
+    @RequestMapping(path = "/public-photos/{userName}", method = RequestMethod.GET)
+    public List<Photo> getPublicPhotos(HttpSession session) {
+        String userName = (String) session.getAttribute("userName");
+        User user = users.findFirstByName(userName);
+        List<Photo> publicPhotos = photos.findByReceiver(user);
+
+        return publicPhotos;
+    }
+
+    private void validateUser(String userName, User receiverUser) throws Exception {
+        if (userName == null) {
+            throw new Exception("null userName");
+        }
+        if (receiverUser == null) {
+            throw new Exception("null receiver");
+        }
+    }
+
+    private Photo savePhoto(MultipartFile photo, String isPublic, User senderUser, User receiverUser) throws Exception {
+        if (!photo.getContentType().startsWith("image")) {
+            throw new Exception("not an image file");
+        }
+        File photoFile = File.createTempFile("photo", photo.getOriginalFilename(), new File("public"));
+        FileOutputStream fos = new FileOutputStream(photoFile);
+        fos.write(photo.getBytes());
+
+        Photo p = new Photo();
+        p.setSender(senderUser);
+        p.setReceiver(receiverUser);
+        p.setFilename(photoFile.getName());
+        p.setIsPublic(isPublic);
+        photos.save(p);
+        return p;
     }
 
     private void deleteFiles(String userName) throws IOException {
