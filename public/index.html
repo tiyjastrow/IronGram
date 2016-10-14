@@ -1,0 +1,32 @@
+<html>
+<body>
+<form action="/login" method="post" id="login" hidden>
+    <input type="text" placeholder="Username" name="username"/>
+    <input type="password" placeholder="Password" name="password"/>
+    <button type="submit">Login</button>
+</form>
+<form action="/search-publicphotos" method="post" id="pub" hidden>
+    View List of Public Photos Sent by:
+    <input type="text" placeholder="username" name="searchname"/>
+    <button type="submit">View Public Photos</button>
+</form>
+<form action="/logout" method="post" id="logout" hidden>
+    <button type="submit">Logout</button>
+</form>
+<form action="/upload" method="post" enctype="multipart/form-data" id="upload" hidden>
+    <input type="text" placeholder="Receiver name" name="receiver"/>
+    <input type="text" placeholder="Timer" name="timer"/>
+    <input type="file" name="photo"/>
+    <input type="checkbox" name="pub" value="true"/>
+    <button type="submit">Upload</button>
+</form>
+
+<script src="jquery-2.1.4.min.js"></script>
+<script src="main.js"></script>
+
+<div id="photos"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
