@@ -8,21 +8,36 @@ function getUser(userData){
     else{
         $("#logout").show();
         $("#upload").show();
+        $("#public-photos").show();
     }
 }
-//need this to run a function
 $.get("/user",getUser);
 
-// loop through and get photos
-//definition of a function
 function getPhotos(photosData) {
     for (var i in photosData) {
         var photo = photosData[i];
         var elem = $("<img>");
-        elem.attr("src", photo.filename)
+        elem.attr("src", photo.filename);
         $("#photos").append(elem);
+        var delay = (photo.seconds * 1000);
+        setInterval(($.post("/delete", {"id":photo.id})), delay);
     }
 }
-// need this to run function
-    // connects to HTML
 $.get("/photos", getPhotos);
+
+function getSharedPhotos(photosData){
+    for (var i in photosData){
+        var photo = photosData[i];
+        var elem = $("<img>");
+        elem.attr("src", photo.filename);
+        $("#public-photos").append(elem);
+        var delay = (photo.seconds * 1000);
+        setInterval(($.post("/delete", {"id":photo.id})), delay);
+    }
+}
+$.get("/public-photos", getSharedPhotos);
+
+// $.get("/delete", deletePhoto);
+// setInterval(deletePhoto, 10000);
+
+

@@ -1,6 +1,6 @@
 package com.theironyard.entity;
 import javax.persistence.*;
-
+import java.util.Date;
 @Entity
 @Table(name = "photos")
 public class Photo {
@@ -17,13 +17,40 @@ public class Photo {
     @Column(nullable = true)
     String filename;
 
-    public Photo(User sender, User receiver, String filename) {
+    @Column
+    boolean shared;
+
+    @Column(nullable = false)
+    int seconds;
+
+    public Photo(User sender, User receiver, String filename, boolean shared, int seconds) {
         this.sender = sender;
         this.receiver = receiver;
         this.filename = filename;
+        this.shared = shared;
+        this.seconds = seconds;
     }
 
     public Photo() {
+    }
+
+    public int getSeconds() {
+        return seconds;
+    }
+
+    public void setSeconds(int seconds) {
+        this.seconds = seconds;
+    }
+
+    public boolean isShared() {
+        return shared;
+    }
+    public boolean getShared() {
+        return shared;
+    }
+
+    public void setShared(boolean shared) {
+        this.shared = shared;
     }
 
     public int getId() {
