@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv=”refresh” content=”60" >
+    <title>Bargin Bin Snapchat</title>
+</head>
+<body>
+
+<!-- id used to identify for javascript -->
+<form action="/login" method="post" id="login" hidden>
+    <input type="text" placeholder="user name" name="username"/>
+    <input type="password" placeholder="password" name="password"/>
+    <button type="submit">Login</button>
+</form>
+
+<form action="/logout" method="post" id="logout" hidden>
+    <button type="submit">Logout</button>
+</form>
+
+<form action="/upload" method="post" enctype="multipart/form-data" id="upload" hidden>
+    <input type="text" placeholder="Receiver name" name="receiver"/>
+    <input type="file" name="photo"/>
+    <input type="number" placeholder="Photo TTL in milliseconds" name="ttl"/>
+    <input type="checkbox" name="isPublic" value="public">is public?
+    <button type="submit">Upload</button>
+</form>
+
+<div id="photos"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
