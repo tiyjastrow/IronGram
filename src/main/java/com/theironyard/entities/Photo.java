@@ -1,8 +1,10 @@
 package com.theironyard.entities;
 
-import org.springframework.web.bind.annotation.PathVariable;
+import com.sun.org.apache.xpath.internal.operations.Mult;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import javax.servlet.annotation.MultipartConfig;
 
 /**
  * Created by joshuakeough on 10/12/16.
@@ -23,13 +25,22 @@ public class Photo {
     @Column(nullable = false)
     private String filename;
 
+    @Column
+    private int displayTime;
+
+    @Column
+    private Boolean isPublic;
+
+
     public Photo() {
     }
 
-    public Photo(User sender, User receiver, String filename) {
+    public Photo(User sender, User receiver, String filename, int displayTime, Boolean isPublic) {
         this.sender = sender;
         this.receiver = receiver;
         this.filename = filename;
+        this.displayTime = displayTime;
+        this.isPublic = isPublic;
     }
 
     public int getId() {
@@ -62,5 +73,27 @@ public class Photo {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public int getDisplayTime() {
+        return displayTime;
+    }
+
+    public void setDisplayTime(int displayTime) {
+        this.displayTime = displayTime;
+    }
+
+    public Boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(String aPublic) {
+        if(aPublic == null) {
+            isPublic = false;
+        } else isPublic = true;
+
+//        if (aPublic.equalsIgnoreCase("true")){
+//            isPublic = true;
+//        }else isPublic = false;
     }
 }

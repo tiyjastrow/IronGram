@@ -11,5 +11,10 @@ import java.util.List;
  */
 public interface PhotoRepo extends CrudRepository<Photo, Integer> {
 
-    List<Photo> findByReceiver(User user);
+    List<Photo> findByReceiver(User name);
+
+    List<Photo> findBySender(User sender);
+
+    List<Photo> findByIsPublic(Boolean b);
 }
+

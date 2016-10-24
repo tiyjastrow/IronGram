@@ -16,10 +16,14 @@
 </form>
 
 <form action="/upload" method="post" enctype="multipart/form-data" id="upload" hidden>
-    <input type="text" placeholder="Reciever name" name="reciever"/>
+    <input type="text" placeholder="Receiver name" name="receiver"/>
     <input type="file" name="photo"/>
+    <input type="number" placeholder="Display time" name="display"/><br/>
+    Public:
+    <input type="checkbox" value="public" name="isPublic"/><br/>
     <button type="submit">Upload</button>
 </form>
+<hr/>
 
 <div id="photos"></div>
 
