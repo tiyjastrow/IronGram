@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<body>
+
+<form action="/login"method="post"id="login" hidden>
+    <input type="text" placeholder="Username" name="userName"/>
+    <input type="password" placeholder="Password" name="password"/>
+    <button type="submit">Login</button>
+</form>
+<br>
+<form action="/logout" method="post" id="logout" hidden>
+    <button type="submit">Logout</button>
+</form>
+<br>
+<form action="/upload"method="post"enctype="multipart/form-data" id="upload"hidden>
+    <input type="text" placeholder="Receiver Name" name="receiver"/>
+    <input type="file" name="photo"/>
+    <br>
+    <input type="checkbox" value="true" name="shared">Make Public</input>
+    <input type="text" placeholder="seconds to view" name="timer"/>
+    <button type="submit">Upload</button>
+</form>
+<br>
+<h2>Photos sent to you:</h2>
+<div id="photos"></div>
+<br>
+<h2>Your public photos:</h2>
+<br>
+<div id="public-photos"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="main.js" type="text/javascript"></script>
+
+</body>
+</html>
