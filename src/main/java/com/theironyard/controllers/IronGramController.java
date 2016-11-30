@@ -23,14 +23,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
 public class IronGramController {
+
     @Autowired
     UserRepository users;
 
@@ -79,9 +79,6 @@ public class IronGramController {
     @RequestMapping(path = "/upload", method = RequestMethod.POST)
     public Photo upload(HttpSession session, HttpServletResponse response, String receiver, MultipartFile photo, boolean shared, String timer) throws Exception {
         String userName = (String) session.getAttribute("userName");
-        if (userName == null) {
-            throw new Exception("Not logged in");
-        }
         User senderUser = users.findFirstByName(userName);
         User receiverUser = users.findFirstByName(receiver);
         if (receiverUser == null) {
@@ -101,21 +98,10 @@ public class IronGramController {
         } else {
             shared = true;
         }
+        Integer seconds = Integer.parseInt(timer);
 
-        int seconds;
-        if (timer == null){
-            seconds = 10;
-        }else{
-            seconds = Integer.parseInt(timer);
-        }
 
-        Photo p = new Photo();
-        p.setSender(senderUser);
-        p.setReceiver(receiverUser);
-        p.setFilename(photoFile.getName());
-        p.setShared(shared);
-        p.setSeconds(seconds);
-
+        Photo p = new Photo(senderUser, receiverUser, photoFile.getName(), shared, seconds);
         photos.save(p);
 
         response.sendRedirect("/");
@@ -125,10 +111,6 @@ public class IronGramController {
     @RequestMapping(path = "/photos", method = RequestMethod.GET)
     public List<Photo> showPhotos(HttpSession session) throws Exception {
         String userName = (String) session.getAttribute("userName");
-        if (userName == null) {
-            throw new Exception("Not logged in");
-        }
-
         User user = users.findFirstByName(userName);
         return photos.findByReceiver(user);
     }
@@ -137,19 +119,17 @@ public class IronGramController {
     @RequestMapping(path = "/public-photos", method = RequestMethod.GET)
     public List<Photo> showSharedPhotos(HttpSession session) throws Exception {
         String userName = (String) session.getAttribute("userName");
-        if (userName == null){
-            throw new Exception("Not logged in");
-        }
         User user = users.findFirstByName(userName);
         List<Photo> userPhotos = photos.findBySender(user);
         List<Photo> sharedPhotos = new ArrayList<>();
-        for (Photo photo : userPhotos){
-            if (photo.getShared() == true){
+        for (Photo photo: userPhotos){
+            if (photo.isShared()){
                 sharedPhotos.add(photo);
             }
         }
         return sharedPhotos;
     }
+
     @RequestMapping(path = "/delete", method = RequestMethod.POST)
     public void deletePhoto(Integer id) throws IOException {
         Photo photo = photos.findById(id);
@@ -158,8 +138,9 @@ public class IronGramController {
         Files.delete(filePath);
         photos.delete(id);
     }
+
+
+
 }
-
-
 
 

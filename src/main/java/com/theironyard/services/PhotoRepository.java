@@ -15,5 +15,5 @@ public interface PhotoRepository extends CrudRepository<Photo, Integer> {
     List<Photo> findBySender(User user);
 
     Photo findById(Integer id);
-//    List<Photo> findByShared(boolean shared);
+
 }

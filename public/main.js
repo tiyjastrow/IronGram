@@ -1,6 +1,8 @@
 /**
  * Created by halleyfroeb on 10/12/16.
  */
+
+
 function getUser(userData){
     if (userData.name === undefined) {
         $("#login").show();
@@ -25,6 +27,11 @@ function getPhotos(photosData) {
 }
 $.get("/photos", getPhotos);
 
+function setImageHidden(photo) {
+    var img = photo;
+    img.style.visibility = 'hidden';
+
+}
 function getSharedPhotos(photosData){
     for (var i in photosData){
         var photo = photosData[i];
@@ -32,12 +39,11 @@ function getSharedPhotos(photosData){
         elem.attr("src", photo.filename);
         $("#public-photos").append(elem);
         var delay = (photo.seconds * 1000);
-        setInterval(($.post("/delete", {"id":photo.id})), delay);
+        setInterval(setImageHidden(photo), delay);
     }
 }
 $.get("/public-photos", getSharedPhotos);
 
-// $.get("/delete", deletePhoto);
-// setInterval(deletePhoto, 10000);
+
 
 
