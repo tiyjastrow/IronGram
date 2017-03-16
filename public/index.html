@@ -13,12 +13,15 @@
 </form>
 
 <form action="/logout" method="post" id="logout" hidden>
+    <h5 id="username"></h5>
     <button type="submit">Logout</button>
 </form>
 
 <form action="/upload" method="post" enctype="multipart/form-data" id="upload" hidden>
     <input type="text" placeholder="receiver name" name="receiver"/>
+    <input type="number" placeholder="seconds to expire" value="10" name="timer"/>
     <input type="file" name="photo"/>
+    <input type="checkbox" value="checked" name="checkBox">public file</>
     <button type="submit">Upload</button>
 </form>
 

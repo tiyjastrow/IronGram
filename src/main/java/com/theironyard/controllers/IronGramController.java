@@ -5,6 +5,7 @@ import com.theironyard.entities.User;
 import com.theironyard.services.PhotoRepository;
 import com.theironyard.services.UserRepository;
 import com.theironyard.utilities.PasswordStorage;
+import org.apache.tomcat.jni.Local;
 import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -21,6 +22,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.ChronoLocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -54,6 +60,8 @@ public class IronGramController {
             throw new Exception("wrong password");
         }
         session.setAttribute("username", username);
+
+
         response.sendRedirect("/");
         return user;
     }
@@ -71,7 +79,7 @@ public class IronGramController {
     }
 
     @RequestMapping(path = "/upload", method = RequestMethod.POST)
-    public Photo upload(HttpSession session, HttpServletResponse response, MultipartFile photo, String receiver) throws Exception {
+    public Photo upload(HttpSession session, HttpServletResponse response, MultipartFile photo, String receiver, Integer timer, String checkBox) throws Exception {
         String username = (String) session.getAttribute("username");
         if (username == null) {
             throw new Exception("User is not logged in.");
@@ -90,7 +98,7 @@ public class IronGramController {
         fos.write(photo.getBytes());
         fos.close();
 
-        Photo p = new Photo(photoFile.getName(), senderUser, receiverUser);
+        Photo p = new Photo(photoFile.getName(), timer, checkBox, senderUser, receiverUser);
         photos.save(p);
 
         response.sendRedirect("/");
@@ -104,17 +112,36 @@ public class IronGramController {
             throw new Exception("User is not logged in.");
         }
         User user = users.findFirstByName(username);
+        List<Photo> usersPhotos = photos.findByReceiver(user);
+
+        for (Photo photo : usersPhotos) {
+            if (photo.getTimeOfFirstView() == null) {
+                photo.setTimeOfFirstView();
+                photos.save(photo);
+            }
+            if (LocalDateTime.now().isAfter(photo.getTimeOfExpiration())) {
+                photos.delete(photo.getId());
+            }
+        }
         return photos.findByReceiver(user);
     }
-
-
-
-//    @RequestMapping(path = "/", method = RequestMethod.GET)
-//    public void home(Model model, HttpSession session){
-//        String username = (String) session.getAttribute("username");
-//        User user = users.findFirstByName(username);
-//        model.addAttribute("user", user);
-//
-//    }
-
 }
+
+//            System.out.println("currentTime = " + currentTime);
+//            System.out.println("deleteTime = " + deleteTime);
+//            System.out.println(" currentTime.isAfter(deleteTime) = " + currentTime.isAfter(deleteTime));
+
+
+//    HashMap<String, LocalDateTime> timeMap = new HashMap<>();
+//
+//    LocalDateTime timeOfFirstView = LocalDateTime.now();
+//
+//        for (Photo photo : usersPhotos) {
+//                timeMap.putIfAbsent(photo.getFilename(), timeOfFirstView);  //DATABASE
+//                long offset = photo.getTimer();
+//                LocalDateTime deleteTime = timeMap.get(photo.getFilename()).plusSeconds(offset);
+//
+//                if (LocalDateTime.now().isAfter(deleteTime)) {
+//                photos.delete(photo.getId());
+//                }
+//                }
