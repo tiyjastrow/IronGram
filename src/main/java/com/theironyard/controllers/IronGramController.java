@@ -31,10 +31,8 @@ import java.util.List;
 
 @RestController
 public class IronGramController {
-
     @Autowired
     UserRepository users;
-
     @Autowired
     PhotoRepository photos;
 
@@ -60,8 +58,6 @@ public class IronGramController {
             throw new Exception("wrong password");
         }
         session.setAttribute("username", username);
-
-
         response.sendRedirect("/");
         return user;
     }
@@ -126,22 +122,3 @@ public class IronGramController {
         return photos.findByReceiver(user);
     }
 }
-
-//            System.out.println("currentTime = " + currentTime);
-//            System.out.println("deleteTime = " + deleteTime);
-//            System.out.println(" currentTime.isAfter(deleteTime) = " + currentTime.isAfter(deleteTime));
-
-
-//    HashMap<String, LocalDateTime> timeMap = new HashMap<>();
-//
-//    LocalDateTime timeOfFirstView = LocalDateTime.now();
-//
-//        for (Photo photo : usersPhotos) {
-//                timeMap.putIfAbsent(photo.getFilename(), timeOfFirstView);  //DATABASE
-//                long offset = photo.getTimer();
-//                LocalDateTime deleteTime = timeMap.get(photo.getFilename()).plusSeconds(offset);
-//
-//                if (LocalDateTime.now().isAfter(deleteTime)) {
-//                photos.delete(photo.getId());
-//                }
-//                }
