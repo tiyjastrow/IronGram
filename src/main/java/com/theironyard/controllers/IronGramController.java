@@ -120,6 +120,6 @@ public class IronGramController {
     public List<Photo> getPublicPhotos(HttpSession session){
         String username = (String) session.getAttribute("username");
         User user = users.findFirstByName(username);
-        return photos.findByReceiverAndIsPublic(user);
+        return photos.findByReceiverAndIsPublic(user, "checked");
     }
 }
