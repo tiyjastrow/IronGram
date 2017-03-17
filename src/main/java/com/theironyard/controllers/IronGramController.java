@@ -5,10 +5,8 @@ import com.theironyard.entities.User;
 import com.theironyard.services.PhotoRepository;
 import com.theironyard.services.UserRepository;
 import com.theironyard.utilities.PasswordStorage;
-import org.apache.tomcat.jni.Local;
 import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,10 +21,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
-import java.time.chrono.ChronoLocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -120,5 +114,12 @@ public class IronGramController {
             }
         }
         return photos.findByReceiver(user);
+    }
+
+    @RequestMapping(path = "/public-photos", method = RequestMethod.GET)
+    public List<Photo> getPublicPhotos(HttpSession session){
+        String username = (String) session.getAttribute("username");
+        User user = users.findFirstByName(username);
+        return photos.findByReceiverAndIsPublic(user);
     }
 }
