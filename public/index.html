@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Iron Gram</title>
+</head>
+<body>
+
+<form action="/login" method="post" id="login" hidden>
+    <input type="text" placeholder="Username" name="username"/>
+    <input type="password" placeholder="Password" name="password"/>
+    <button type="submit">Login</button>
+</form>
+
+<form action="logout" method="post" id="logout" hidden>
+    <button type="submit">Logout</button>
+    <h2 id="username"></h2>
+</form>
+
+
+<form action="/upload" method="post" enctype="multipart/form-data" id="upload" hidden>
+    <h3><em>Send a Photo!</em></h3>
+    <label for="receiver">Please enter the receiver name below:</label><br/>
+    <input type="text" placeholder="Receiver Name" name="receiver" id="receiver"/><br/><br/>
+    <label for="receiver">Please choose a photo to send:</label><br/>
+    <input type="file" name="photo"/>
+    <label for="cbox1">Make Public?</label>
+    <input type="checkbox" name="publicity" id="cbox1" value="true" data-val="true">&nbsp;&nbsp;&nbsp;&nbsp;
+    <label for="numList">Display Timer (Seconds)</label>
+    <select name="time" id="numList">
+        <option selected value="10">10</option>
+        <option value="9">9</option>
+        <option value="8">8</option>
+        <option value="7">7</option>
+        <option value="6">6</option>
+        <option value="5">5</option>
+        <option value="4">4</option>
+        <option value="3">3</option>
+        <option value="2">2</option>
+        <option value="1">1</option>
+    </select>
+    <br/>
+    <br/>
+    <button type="submit">Upload</button>
+    <hr/>
+</form>
+<br/>
+    <button type="submit" id="view" hidden>View Photos</button>
+    <div id="photos" hidden><div id="timer_div"></div></div>
+
+
+<script src="jquery-3.1.1.min.js"></script>
+<script src="main.js"></script>
+
+</body>
+</html>
