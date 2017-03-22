@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gram</title>
+</head>
+<body>
+
+<form action="/login" method="post" id="login" hidden>
+    <input type="text" placeholder="Username" name="username" />
+    <input type="password" placeholder="password" name="password" />
+    <button type="submit">Login</button>
+</form>
+
+<form action="/logout" method="post" id="logout" hidden>
+    <h5 id="username"></h5>
+    <button type="submit">Logout</button>
+</form>
+
+<h3>Send a file to a friend!</h3>
+<form action="/upload" method="post" enctype="multipart/form-data" id="upload" hidden>
+    <input type="text" placeholder="Enter Name of Receiver" name="receiver" />
+    <input type="file" name="photo"/>
+    <button type="submit">Upload</button>
+
+    <select name="seconds" >
+        <option value="1">1</option>
+        <option value="3">3</option>
+        <option value="7">7</option>
+        <option value="10">10</option>
+    </select>
+    <br><br>
+    <span>Make Private!<input type="checkbox" name="privacy" value="true"/></span>
+
+</form>
+
+<div id="photos"></div>
+
+<script src="jquery-3.1.1.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
