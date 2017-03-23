@@ -1,15 +1,24 @@
 function getUser(userData) {
     if (userData.name === undefined) {
+        console.log("NOT LOGGED IN");
         $("#login").show();
     }
     else {
+        console.log("LOGGED IN");
         $("#logout").show();
         $("#username").text(userData.name);
         $("#upload").show();
+        $("#photos").show();
+
+        $.get("/photos", getPhotos);
+
+        $.get("/public-photos", getPhotos);
+
+        setInterval(function () {
+            $.get("/deletePhotos", deletePhotos);
+        }, 1000);
     }
 }
-
-$.get("/user", getUser);
 
 function getPhotos(photosData) {
     for (var i in photosData) {
@@ -22,9 +31,6 @@ function getPhotos(photosData) {
     }
 }
 
-$.get("/photos", getPhotos);
-
-//since receiving list from deletePhotos
 function deletePhotos(photosData) {
     console.log(photosData);
     if (photosData.length > 0) {
@@ -35,9 +41,6 @@ function deletePhotos(photosData) {
 }
 
 
-
-$.get("/public-photos", getPhotos);
-
-setInterval(function () {
-    $.get("/deletePhotos", deletePhotos);
-}, 1000);
+console.log("BEFORE AJAX");
+$.get("/user", getUser);
+console.log("AFTER AJAX");

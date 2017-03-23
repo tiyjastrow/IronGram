@@ -22,6 +22,9 @@
     <input type="text" placeholder="Enter Name of Receiver" name="receiver" />
     <input type="file" name="photo"/>
     <button type="submit">Upload</button>
+    <br><br>
+
+    <span>Make Private!<input type="checkbox" name="privacy" value="true"/></span>
 
     <select name="seconds" >
         <option value="1">1</option>
@@ -29,12 +32,11 @@
         <option value="7">7</option>
         <option value="10">10</option>
     </select>
-    <br><br>
-    <span>Make Private!<input type="checkbox" name="privacy" value="true"/></span>
+
 
 </form>
 
-<div id="photos"></div>
+<div id="photos" hidden></div>
 
 <script src="jquery-3.1.1.min.js"></script>
 <script src="main.js"></script>

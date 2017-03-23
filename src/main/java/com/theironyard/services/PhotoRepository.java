@@ -8,8 +8,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 public interface PhotoRepository extends CrudRepository<Photo, Integer> {
-    List<Photo> findByReceiver(User user);
+    List<Photo> findByReceiverAndPrivacyTrue(User user);
     List<Photo> findBySender(User user);
+    List<Photo> findByPrivacyFalse();
     //@Transactional
     //Long deleteByReceiver(User user);
 }
