@@ -27,10 +27,11 @@ function getPhotos(photosData){
 }
 
 
-/*unload*/
+/*this is currently running constantly, very inefficient.*/
 var decrementCounter = setInterval(function() {
     $( "div" ).children('img').each(function( index ) {
         $.post("/decrement-photo", {id: this.id}, function(data){
+            console.log("post..."+ data);
             if(data <= 0) {
                 window.location.href = "/";
             };
