@@ -149,13 +149,13 @@ public class IronGramController {
         return deletedPhotoId;
     }
 
-    @RequestMapping(value = "/public-photos", method = RequestMethod.GET)
-    public List<Photo> showPublicPhotos(HttpSession session, HttpServletResponse response) throws Exception {
-//        String username = (String) session.getAttribute("username");//this is the receiver
-//        if (username == null) {
-//            throw new Exception("Not logged in");
-//        }
-//        User user = users.findFirstByName(username);
-        return photos.findByPrivacyFalseAndSender();
-    }
+//    @RequestMapping(value = "/public-photos", method = RequestMethod.GET)
+//    public List<Photo> showPublicPhotos(HttpSession session, HttpServletResponse response) throws Exception {
+////        String username = (String) session.getAttribute("username");//this is the receiver
+////        if (username == null) {
+////            throw new Exception("Not logged in");
+////        }
+////        User user = users.findFirstByName(username);
+//        return photos.findByPrivacyFalseAndSender();
+//    }
 }
